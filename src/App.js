@@ -8,6 +8,8 @@ import Register from './components/Register';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import GetLocation from './components/GetLocation';
+import MidPoint from './components/MidPoint';
+import Home from './components/Home';
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
       <Route exact path='/otp' element={<Otp/>}></Route>
       <Route exact path='/register' element={<Register/>}></Route>
       <Route exact path='/getLocation' element={<GetLocation/>}></Route>
+      <Route exact path='/midpoint' element={<MidPoint/>}></Route>
+      <Route exact path='/home' element={<Home/>}></Route>
 
     </Routes>
    </Router>
