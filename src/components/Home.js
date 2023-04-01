@@ -2,12 +2,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Card,CardHeader,CardBody,CardTitle,CardText, Button } from 'reactstrap'
+import CreateMeeting from './CreateMeeting';
 
 const Home = () => {
 
     let[allMeetingData,setallMeetingData]=useState([])
     let[allUserData,setallUserData]=useState([]);
     let[allinvitesData,setallinvitesdata]=useState([]);
+
+    let localId=localStorage.getItem('userId');
+    let localToken=localStorage.getItem('token');
    
 
       
@@ -26,7 +30,7 @@ const Home = () => {
         let getUser= async ()=>{
             try{
                 let userData=await axios.get("http://localhost:5000/api/getAllUsers")
-                  console.log("User data ",userData)
+                  console.log("User data ",userData.data)
                   setallUserData(userData.data)
                   
             }catch(e){
@@ -55,23 +59,24 @@ const Home = () => {
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
    let showMeetingData= () =>{
-    let id="640f58b03148659d8f398768";
+   
     if(!allMeetingData){
         <h3>No Meeting Dta found</h3>
     }else{
         return allMeetingData.filter(
             (data)=>{
-                if(data.requesterId===id || data.receiverIds.includes(id)){
+                if(data.requesterId===localId || data.receiverIds.includes(localId)){
                     return data;
                 }
             }).map((meeting)=>{
                
-                let requester= allUserData.find((user)=>user._id === meeting.requesterId);
+                let requester=  allUserData.find((user)=>user._id === meeting.requesterId);
+                console.log(requester.fname);
                 let invited=  meeting.receiverIds.length;
                 let invitess= allinvitesData.filter(data=>data.meetingId === meeting._id &&
                   data.status ==="accepted");
                   let invitescount=invitess.length;
-                console.log("count ",invitess);
+                console.log("count ",requester);
                 return(
                     <Card
                     className="my-2"
@@ -88,11 +93,11 @@ const Home = () => {
                     <CardBody>
                       <CardTitle tag="h5">
                         {meeting.meetingName}
-                      ( {requester.fname})
+                      ({requester.fname})
                       </CardTitle>
                       <CardText>
                        {meeting.description}
-                       {meeting.requesterId===id ? <span> ( You)</span> : null}
+                       {meeting.requesterId===localId ? <span> ( You)</span> : null}
                       </CardText>
                     </CardBody>
                   </Card>
@@ -114,11 +119,17 @@ const Home = () => {
    console.log(event,id)
    let data={
     meetingId:id,
-    receiverId:"641e8b66f514dd1f8514eed2",
+    receiverId:localId,
     status:event
    }
+   let header={
+    Authorization:localToken
+   }
    try{
-    let allMeetings=await axios.post("http://localhost:5000/api/updateMeeting",data)
+    let allMeetings=await axios.post("http://localhost:5000/api/updateMeeting",data,
+    {
+      headers:header
+    });
       console.log("Status data ",allMeetings)
       
       
@@ -132,14 +143,13 @@ const Home = () => {
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    let showInvitessData= () =>{
-    let id="641e8c16f514dd1f8514eedb";
-    let id2="641e8b66f514dd1f8514eed2";
+   
     if(!allMeetingData){
         <h3>No Meeting Dta found</h3>
     }else{
         return allMeetingData.filter(
             (data)=>{
-                if(data.receiverIds.includes(id2)){
+                if(data.receiverIds.includes(localId)){
                     return data;
                 }
             }).map((meeting)=>{
@@ -195,7 +205,7 @@ const Home = () => {
             </div>
             <div className='col-4' style={{paddingLeft:180}}>
                 <h4 style={{paddingLeft:20,paddingBottom:10}} >Create New Meeting</h4>
-                { showMeetingData()}
+               <CreateMeeting></CreateMeeting>
             </div>
         </div>
     </div>

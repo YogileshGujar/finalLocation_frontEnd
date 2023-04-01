@@ -7,6 +7,8 @@ import Headers from './Headers'
 const GetLocation = () => {
 
   let Number=useLocation();
+  let localnumber=localStorage.getItem('phonnumber')
+  console.log("from localstorage ",localnumber)
   console.log("test otp for location ",Number.state)
   //  let [locationfile,setlocationfile]=useState({})
   let [locationfile,setlocationfile]=useState({
