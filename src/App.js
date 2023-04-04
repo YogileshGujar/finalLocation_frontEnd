@@ -75,7 +75,11 @@ function App() {
           <Login/>
         </PrivateRouteforLogin>
       }></Route>
-      <Route exact path='/otp' element={<Otp/>}></Route>
+      <Route exact path='/otp' element={
+        <PrivateRouteforLogin>
+          <Otp/>
+        </PrivateRouteforLogin>
+      }></Route>
       <Route exact path='/register' element={<Register/>}></Route>
       <Route exact path='/getLocation' element={
       <PrivateRoute>

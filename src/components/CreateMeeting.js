@@ -6,7 +6,7 @@ const CreateMeeting = () => {
 
  let [isCreateMeetingOpen,setisCreateMeetingOpen]=useState(false);
  let [User,setUser]=useState([]);
- let [dropdownOpen, setOpen] = React.useState(false);
+ let [dropdownOpen, setOpen] = useState(false);
  let [selectedUsers, setSelectedUsers] = useState([]);
  const [isChecked, setIsChecked] = useState(false);
 
@@ -15,6 +15,7 @@ const CreateMeeting = () => {
 
 const handleCheckboxChange = (event) => {
   setIsChecked(event.target.checked);
+  console.log("Chacked ",isChecked)
 };
  
 
@@ -116,7 +117,7 @@ console.log("user meeting data2",Meeting.ReceiverIds)
     meetingName:Meeting.meetingName,
     description:Meeting.description,
     requesterId:Meeting.RequesterId,
-    receiverIds:selectedUsers
+    receiverIds:selectedUsers.split(',')
    }
    let header={
     Authorization:localToken

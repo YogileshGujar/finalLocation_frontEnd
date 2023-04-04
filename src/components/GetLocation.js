@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
+
 import { Button } from 'reactstrap';
 import Headers from './Headers'
 
 const GetLocation = () => {
+  let navigate = useNavigate();
 
   let Number=useLocation();
   let localnumber=localStorage.getItem('phonnumber')
@@ -12,7 +14,7 @@ const GetLocation = () => {
   console.log("test otp for location ",Number.state)
   //  let [locationfile,setlocationfile]=useState({})
   let [locationfile,setlocationfile]=useState({
-    phonNumber:Number.state,
+    phonNumber:localnumber,
     lat:'',
     long:''
    
@@ -41,6 +43,7 @@ const GetLocation = () => {
         );
         if(findLocation.status === 200){
           console.log("Location getit ",findLocation)
+          navigate('/home');
         }
      }catch(e){
       console.log("Error from Api", e);

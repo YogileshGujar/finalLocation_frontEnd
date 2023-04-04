@@ -3,6 +3,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Card,CardHeader,CardBody,CardTitle,CardText, Button } from 'reactstrap'
 import CreateMeeting from './CreateMeeting';
+import ForJoine from './ForJoine';
+import UpdateMeetingData from './UpdateMeetingData';
 
 const Home = () => {
 
@@ -55,6 +57,16 @@ const Home = () => {
      
     },[])
 //    console.log("fron console ",allMeetingData[0].requesterId);
+
+  let dataForLocation=(creater,joinds)=>{
+      console.log('dataForLocation data from meeting map ',creater,joinds);
+      let joinduserIds=[];
+      joinduserIds=[creater, ...joinds];
+      console.log('dataForLocation data from meeting map array ',joinduserIds);
+      let userfilterData =allUserData.filter((data)=>joinduserIds.includes(data._id));
+      console.log('dataForLocation data from meeting map array of users ',userfilterData);
+
+  }
  
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
@@ -71,12 +83,20 @@ const Home = () => {
             }).map((meeting)=>{
                
                 let requester=  allUserData.find((user)=>user._id === meeting.requesterId);
-                console.log(requester.fname);
+              
+                let requesterName =requester ? requester.fname:"Unknown";
+               
                 let invited=  meeting.receiverIds.length;
                 let invitess= allinvitesData.filter(data=>data.meetingId === meeting._id &&
                   data.status ==="accepted");
                   let invitescount=invitess.length;
-                console.log("count ",requester);
+                  console.log("count for joind user ",invitess);
+                  let invitessreceiverId= invitess.map((data)=>data.receiverId);
+                  if(invitescount>0){
+                   
+                    let locationData= dataForLocation(meeting.requesterId,invitessreceiverId);
+                  }
+               
                 return(
                     <Card
                     className="my-2"
@@ -93,13 +113,18 @@ const Home = () => {
                     <CardBody>
                       <CardTitle tag="h5">
                         {meeting.meetingName}
-                      ({requester.fname})
+                      ({requester ? requester.fname:"Unknown"})
                       </CardTitle>
                       <CardText>
                        {meeting.description}
                        {meeting.requesterId===localId ? <span> ( You)</span> : null}
                       </CardText>
+                      {/* <ForJoine user={allUserData}></ForJoine> */}
+                     
+                      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
+                      showMeetingData={showMeetingData}/> : null}
                     </CardBody>
+                    
                   </Card>
                 )
             })
