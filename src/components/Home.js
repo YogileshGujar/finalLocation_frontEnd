@@ -22,16 +22,16 @@ const Home = () => {
 
       
     useEffect(()=>{
-        let getData= async ()=>{
-            try{
-                let allMeetings=await axios.get("http://localhost:5000/api/getAllMeetings")
-                  console.log("Meeting data ",allMeetings)
-                  setallMeetingData(allMeetings.data)
+        // let getData= async ()=>{
+        //     try{
+        //         let allMeetings=await axios.get("http://localhost:5000/api/getAllMeetings")
+        //           console.log("Meeting data ",allMeetings)
+        //           setallMeetingData(allMeetings.data)
                   
-            }catch(e){
-                console.log("error...", e)
-            }
-        }
+        //     }catch(e){
+        //         console.log("error...", e)
+        //     }
+        // }
 
         let getUser= async ()=>{
             try{
@@ -55,11 +55,26 @@ const Home = () => {
             }
         }
             
-      getData();
+      // getData();
+      getAllData();
       getUser();
       getInvites();
      
     },[])
+   let getAllData=(()=>{
+    let getData =  async ()=>{
+      try{
+          let allMeetings=await axios.get("http://localhost:5000/api/getAllMeetings")
+            console.log("Meeting data ",allMeetings)
+            setallMeetingData(allMeetings.data)
+            
+      }catch(e){
+          console.log("error...", e)
+      }
+  }
+  getData();
+  showMeetingData();
+   })
 //    console.log("fron console ",allMeetingData[0].requesterId);
 
   let dataForLocation=(creater,joinds)=>{
@@ -136,7 +151,7 @@ const Home = () => {
                       {/* <ForJoine user={allUserData}></ForJoine> */}
                     
                      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
-                      showMeetingData={showMeetingData}/> : null} 
+                      showMeetingData={()=>getAllData()}/> : null} 
                     </CardBody>
                     {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
                                onClick={()=>navigate('/midpoint',{state:locations})}

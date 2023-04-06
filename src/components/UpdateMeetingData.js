@@ -59,7 +59,7 @@ const UpdateMeetingData = (props) => {
                 headers:header 
             })
             console.log("Updated adata ",UpdatedMeetingData)
-            props.showMeetingData();
+            props.showMeetingData()
             toggleUpdateMeetingData();
             
         }catch(e){
