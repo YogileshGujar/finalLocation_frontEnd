@@ -1,12 +1,16 @@
 
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { Card,CardHeader,CardBody,CardTitle,CardText, Button } from 'reactstrap'
 import CreateMeeting from './CreateMeeting';
 import ForJoine from './ForJoine';
+import MidPoint from './MidPoint';
 import UpdateMeetingData from './UpdateMeetingData';
 
 const Home = () => {
+
+  let navigate = useNavigate();
 
     let[allMeetingData,setallMeetingData]=useState([])
     let[allUserData,setallUserData]=useState([]);
@@ -61,11 +65,14 @@ const Home = () => {
   let dataForLocation=(creater,joinds)=>{
       console.log('dataForLocation data from meeting map ',creater,joinds);
       let joinduserIds=[];
+      
       joinduserIds=[creater, ...joinds];
       console.log('dataForLocation data from meeting map array ',joinduserIds);
       let userfilterData =allUserData.filter((data)=>joinduserIds.includes(data._id));
       console.log('dataForLocation data from meeting map array of users ',userfilterData);
-
+      let datawithlatLong= userfilterData.map((data)=> data.Location )
+      console.log('dataForLocation data from meeting map array of users lat & long',datawithlatLong[0]);
+      return datawithlatLong;
   }
  
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +88,7 @@ const Home = () => {
                     return data;
                 }
             }).map((meeting)=>{
-               
+                let locations;
                 let requester=  allUserData.find((user)=>user._id === meeting.requesterId);
               
                 let requesterName =requester ? requester.fname:"Unknown";
@@ -95,7 +102,13 @@ const Home = () => {
                   if(invitescount>0){
                    
                     let locationData= dataForLocation(meeting.requesterId,invitessreceiverId);
+                    console.log('dataForLocation data from meeting map array of users lat & long from return',
+                    locationData,typeof(locationData));
+                    locations=locationData;
+                    console.log('dataForLocation data from meeting map array of users lat & long from return with locatrion array',
+                    locations,typeof(locations));
                   }
+                  
                
                 return(
                     <Card
@@ -119,12 +132,16 @@ const Home = () => {
                        {meeting.description}
                        {meeting.requesterId===localId ? <span> ( You)</span> : null}
                       </CardText>
-                      {/* <ForJoine user={allUserData}></ForJoine> */}
                      
-                      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
-                      showMeetingData={showMeetingData}/> : null}
-                    </CardBody>
+                      {/* <ForJoine user={allUserData}></ForJoine> */}
                     
+                     {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
+                      showMeetingData={showMeetingData}/> : null} 
+                    </CardBody>
+                    {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
+                               onClick={()=>navigate('/midpoint',{state:locations})}
+                               >ShowMidPoint</Button> : null}
+                     
                   </Card>
                 )
             })

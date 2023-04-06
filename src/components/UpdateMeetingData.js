@@ -72,8 +72,8 @@ const UpdateMeetingData = (props) => {
 
   return (
     <>
-    <Button style={{marginLeft:100}} color="info"  
-    onClick={toggleUpdateMeetingData}>Update Meeting</Button>
+    <Button style={{marginLeft:126,marginRight:-60}} color="info"  
+    onClick={toggleUpdateMeetingData}>UpdateMeeting</Button>
 
 <Modal isOpen={UpdateMeeting} toggle={toggleUpdateMeetingData}>
             <ModalHeader toggle={toggleUpdateMeetingData}>Update Meeting data</ModalHeader>
