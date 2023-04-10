@@ -1,14 +1,27 @@
 import axios from 'axios';
 import React, {useEffect, useState } from 'react'
+import DatePicker from 'react-datepicker';
+import TimePicker from 'react-time-picker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Button,Form, Modal,ModalBody,ModalFooter,ModalHeader,FormGroup,Label,Input,DropdownItem,DropdownToggle,ButtonDropdown
    , DropdownMenu,Card,CardHeader,CardBody,CardTitle,CardText} from 'reactstrap'
 const CreateMeeting = () => {
 
  let [isCreateMeetingOpen,setisCreateMeetingOpen]=useState(false);
+
  let [User,setUser]=useState([]);
+
  let [dropdownOpen, setOpen] = useState(false);
+
  let [selectedUsers, setSelectedUsers] = useState([]);
- const [isChecked, setIsChecked] = useState(false);
+
+ let [isChecked, setIsChecked] = useState(false);
+
+ let [startDate, setStartDate] = useState(new Date());
+//  let  [startTime, setStartTime] = useState('10:00');
+
+ let [endDate, setEndDate] = useState(new Date());
+
 
  let localId=localStorage.getItem('userId');
  let localToken=localStorage.getItem('token');
@@ -17,13 +30,26 @@ const handleCheckboxChange = (event) => {
   setIsChecked(event.target.checked);
   console.log("Chacked ",isChecked)
 };
+
+let  handleStartDateChange = (data)=>{
+     setStartDate(data.getTime());
+}
+// let  handleStartTimeChange  =(time) =>{
+//   setStartTime(time)
+// }
+
+let handleEndDateChange = (data)=>{
+    setEndDate(data.getTime())
+}
+
+console.log("start time , end time input",startDate, "for end time ",endDate)
  
 
  let [Meeting,setMeeting]=useState({
     meetingName:"",
     description:"",
     RequesterId:localId,
-    ReceiverIds:[]
+    ReceiverIds:[],
  });
 
 let handleUserSelection = (selectedUser) =>{
@@ -102,7 +128,7 @@ let handleChange=(e)=>{
 }
 
 console.log("Meeting enter",Meeting)
-console.log("user meeting data",User)
+// console.log("user meeting data",User)
 
 let SubmitMeeting= async ()=>{
      
@@ -111,13 +137,17 @@ let SubmitMeeting= async ()=>{
   setMeeting({ ...Meeting,ReceiverIds: selectedUsers})
 
 //    let receiverIds=Meeting.ReceiverIds.split(',')
-console.log("user meeting data2",Meeting.ReceiverIds)
+// console.log("user meeting data2",Meeting.ReceiverIds)
 
    let createdata={
     meetingName:Meeting.meetingName,
     description:Meeting.description,
     requesterId:Meeting.RequesterId,
-    receiverIds:selectedUsers.split(',')
+    // receiverIds:selectedUsers.split(','),
+    receiverIds:selectedUsers,
+    startDateTime:startDate,
+    endDateTime:endDate
+
    }
    let header={
     Authorization:localToken
@@ -128,7 +158,7 @@ console.log("user meeting data2",Meeting.ReceiverIds)
     {
       headers:header
     });
-    console.log(MeetingData);
+    // console.log(MeetingData);
 
    }catch(e){
     console.log("Error :Meeting data Is not send..")
@@ -149,7 +179,7 @@ console.log("user meeting data2",Meeting.ReceiverIds)
             <ModalBody>
              <Form>
              <FormGroup>
-                <Label for="examplePassword">Title</Label>
+                <Label for="examplePassword">Meeting Name</Label>
                 <Input
                   id="TimeetingNametle"
                   name="meetingName"
@@ -160,7 +190,7 @@ console.log("user meeting data2",Meeting.ReceiverIds)
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="examplePassword">Content</Label>
+                <Label for="examplePassword">Meeting Description</Label>
                 <Input
                   id="description"
                   name="description"
@@ -169,6 +199,40 @@ console.log("user meeting data2",Meeting.ReceiverIds)
                   onChange={handleChange}
               
                 />
+              </FormGroup>
+
+              <FormGroup>
+
+                <div>
+                <label>Start Date:</label>
+                <DatePicker               
+                selected={Meeting.startDate}
+                onChange={handleStartDateChange}               
+                dateFormat="yyyy/MM/dd h:mm aa"
+                />   
+                {/* <label>Start Time:</label> 
+                <TimePicker value={startTime}
+                showTimeSelect
+                  timeFormat='HH:mm'
+                   onChange={handleStartTimeChange}
+                   timeCaption='Time' 
+                   timeIntervals={15}
+                     />        */}
+                </div>
+                  
+              </FormGroup>
+
+              <FormGroup>
+                <DatePicker
+                
+                selected={Meeting.endDate}
+                onChange={handleEndDateChange}
+                // showTimeSelect
+                // timeFormat='HH:mm'
+                // timeIntervals={15}
+                dateFormat="yyyy/MM/dd h:mm aa"
+                // timeCaption='Time'
+                />              
               </FormGroup>
               <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
                 isOpen={dropdownOpen}>

@@ -15,6 +15,7 @@ export function PrivateRoute({children}){
 
         if(curentTime < expiryTime){
             tokenActive =true;
+            console.log("i want type of time ",typeof(curentTime),curentTime);
         }
     }
 
@@ -37,6 +38,8 @@ export function PrivateRouteforLogin({children}){
 
         if(curentTime < expiryTime){
             tokenActive =true;
+        }else{
+            localStorage.clear(); 
         }
     }
     // if(!userInfo.token){
