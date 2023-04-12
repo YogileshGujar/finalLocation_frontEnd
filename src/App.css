@@ -28,7 +28,7 @@ body {
 .forms-inputs input:focus {
   box-shadow: none;
   outline: none;
-  border: 2px solid #000;
+  border: 2px solid #000000;
 }
 .btn {
   height: 50px;

@@ -143,7 +143,6 @@ let SubmitMeeting= async ()=>{
     meetingName:Meeting.meetingName,
     description:Meeting.description,
     requesterId:Meeting.RequesterId,
-    // receiverIds:selectedUsers.split(','),
     receiverIds:selectedUsers,
     startDateTime:startDate,
     endDateTime:endDate
@@ -152,13 +151,14 @@ let SubmitMeeting= async ()=>{
    let header={
     Authorization:localToken
    }
+   console.log("for craete data  Asif",createdata);
 
    try{
     let MeetingData= await axios.post("http://localhost:5000/api/createMeeting",createdata,
     {
       headers:header
     });
-    // console.log(MeetingData);
+   
 
    }catch(e){
     console.log("Error :Meeting data Is not send..")
@@ -175,7 +175,7 @@ let SubmitMeeting= async ()=>{
       onClick={toggleCreateMeetingModal} >Create New Meeting</Button>
 
 <Modal isOpen={isCreateMeetingOpen} toggle={toggleCreateMeetingModal}>
-            <ModalHeader toggle={toggleCreateMeetingModal}>Create Blog</ModalHeader>
+            <ModalHeader toggle={toggleCreateMeetingModal}>Enter Meeting Info</ModalHeader>
             <ModalBody>
              <Form>
              <FormGroup>
@@ -204,8 +204,8 @@ let SubmitMeeting= async ()=>{
               <FormGroup>
 
                 <div>
-                <label>Start Date:</label>
-                <DatePicker               
+                <label color='bg-info' >Meeting Start Date:</label>
+                <DatePicker              
                 selected={Meeting.startDate}
                 onChange={handleStartDateChange}               
                 dateFormat="yyyy/MM/dd h:mm aa"
@@ -223,6 +223,7 @@ let SubmitMeeting= async ()=>{
               </FormGroup>
 
               <FormGroup>
+              <label>Meeting End Date:</label>
                 <DatePicker
                 
                 selected={Meeting.endDate}
@@ -236,8 +237,8 @@ let SubmitMeeting= async ()=>{
               </FormGroup>
               <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
                 isOpen={dropdownOpen}>
-                <DropdownToggle className="bg-primary" caret>
-                    Sample Button Dropdown
+                <DropdownToggle className="bg-info" color='bg-dark' caret>
+                    Invite your Frinds for Meeting
                 </DropdownToggle>
                 <DropdownMenu>
                 <DropdownItem header>Select users</DropdownItem>
@@ -254,7 +255,7 @@ let SubmitMeeting= async ()=>{
              </Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" 
+              <Button  className="bg-info" color="bg-info" 
               onClick={SubmitMeeting}
               >
                 Submit

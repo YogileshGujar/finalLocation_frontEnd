@@ -12,6 +12,7 @@ const Otp = () => {
   console.log("test otp",Number.state)
 
   let userInfo = useContext(AuthContext);
+  let localID= localStorage.getItem('userId');
   
   let navigate = useNavigate();
 
