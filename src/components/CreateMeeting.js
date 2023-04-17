@@ -5,7 +5,7 @@ import TimePicker from 'react-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button,Form, Modal,ModalBody,ModalFooter,ModalHeader,FormGroup,Label,Input,DropdownItem,DropdownToggle,ButtonDropdown
    , DropdownMenu,Card,CardHeader,CardBody,CardTitle,CardText} from 'reactstrap'
-const CreateMeeting = () => {
+const CreateMeeting = (props) => {
 
  let [isCreateMeetingOpen,setisCreateMeetingOpen]=useState(false);
 
@@ -158,6 +158,7 @@ let SubmitMeeting= async ()=>{
     {
       headers:header
     });
+    props.showMeetingData()
    
 
    }catch(e){
@@ -235,7 +236,8 @@ let SubmitMeeting= async ()=>{
                 // timeCaption='Time'
                 />              
               </FormGroup>
-              <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
+              <ButtonDropdown
+               toggle={() => { setOpen(!dropdownOpen) }}
                 isOpen={dropdownOpen}>
                 <DropdownToggle className="bg-info" color='bg-dark' caret>
                     Invite your Frinds for Meeting

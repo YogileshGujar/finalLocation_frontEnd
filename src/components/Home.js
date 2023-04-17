@@ -6,8 +6,10 @@ import { Card,CardHeader,CardBody,CardTitle,CardText, Button } from 'reactstrap'
 import CreateMeeting from './CreateMeeting';
 import ForJoine from './ForJoine';
 import MidPoint from './MidPoint';
+import JoineName from './JoineName';
 import UpdateMeetingData from './UpdateMeetingData';
 import '../App.css';
+import DeleteMeeting from './DeleteMeeting';
 
 
 const Home = () => {
@@ -109,6 +111,7 @@ const Home = () => {
                 let endtimestamp;
                 let expiry=false;
                 let curentTime=Date.now();
+                let usersinInvitess=[];
 
                 let requester=  allUserData.find((user)=>user._id === meeting.requesterId);
               
@@ -123,6 +126,8 @@ const Home = () => {
                   data.status ==="accepted");
                   let invitescount=invitess.length;
                   console.log("count for joind user ",invitess);
+                  usersinInvitess=invitess.map(data=>data.receiverId)
+                  console.log("count for joind user inviteess ",usersinInvitess);
                   let invitessreceiverId= invitess.map((data)=>data.receiverId);
                   if(invitescount>0){
                    
@@ -144,82 +149,21 @@ const Home = () => {
 
                   
                
-                // return(
-                //     // <Card
-                //     // // className="my-2"
-                //     // className={`my-2 ${expiry ?  'bg-danger' : '' }`}
+                return(
+                    // <Card
+                    // // className="my-2"
+                    // className={`my-2 ${expiry ?  'bg-danger' : '' }`}
                    
-                //     // // color="light"
-                //     // style={{
-                //     //   width: '18rem'
-                //     // }}
-                //     <Card
-                //     className="my-2"
-                //      style={{
-                //       width: '18rem',
-                //       backgroundColor: expiry ? '#f98585' : ''
-                //     }}
-                //   >
-                //     <CardHeader 
-                //     style={{
-                      
-                //       backgroundColor: expiry ? '#f98585' : '#adf5b2'
-                //     }}
-                //     >
-                //      { meeting.status } 
-                //      (invited {invited})
-                //      (Joined {invitescount})
-                //     </CardHeader>
-                //     <CardBody >
-                //       <CardTitle tag="h5">
-                //         {meeting.meetingName}
-                //       ({requester ? requester.fname:"Unknown"})
-                //       {/* {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()} */}
-                //       </CardTitle>
-                //       <CardText>
-                //        {meeting.description}
-                //        {meeting.requesterId===localId ? <span> ( You)</span> : null}
-                //       </CardText>
-                //       {expiry===true ? <CardText><h5 style={{color:'#fff2f2'}} >This Meeting is Over</h5></CardText> : null}
-                     
-                //       {/* <ForJoine user={allUserData}></ForJoine> */}
-                    
-                //      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
-                //       showMeetingData={()=>getAllData()}/> : null} 
-                //     </CardBody>
-                //     {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
-                //                onClick={()=>navigate('/midpoint',{state:locations})}
-                //                >ShowMidPoint</Button> : null}
-                     
-                //   </Card>
-                // )
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-               
-
-
-                  return(
-                  <>
-                  <div  style={{ position: "relative" }}>
-                  <Card 
-                  key={meeting._id}
-                  className="meeting-card"
-                  onMouseEnter={() => {
-                    const card = document.querySelector(`#hover-card-${meeting._id}`);
-                    card.style.opacity = 1;
-                    card.style.visibility = "visible";
-                    // card.classList.add("hover-card-visible");
-                  }}
-                  onMouseLeave={() => {
-                    const card = document.querySelector(`#hover-card-${meeting._id}`);
-                    card.style.opacity = 0;
-                    card.style.visibility = "hidden";
-                    // card.classList.remove("hover-card-visible");
-                  }}
-                  style={{
-                    width: "18rem",
-                    // backgroundColor: expiry ? "#f98585" : "",
-                    marginBottom:10
-                  }}
+                    // // color="light"
+                    // style={{
+                    //   width: '18rem'
+                    // }}
+                    <Card
+                    className="my-2"
+                     style={{
+                      width: '18rem',
+                      backgroundColor: expiry ? '#f98585' : ''
+                    }}
                   >
                     <CardHeader 
                     style={{
@@ -227,21 +171,21 @@ const Home = () => {
                       backgroundColor: expiry ? '#f98585' : '#adf5b2'
                     }}
                     >
-                     {/* { meeting.status }  */}
-                     {/* (invited {invited}) */}
-                     {/* (Joined {invitescount}) */}
+                     { meeting.status } 
+                     (invited {invited})
+                     (Joined {invitescount})
                     </CardHeader>
                     <CardBody >
                       <CardTitle tag="h5">
                         {meeting.meetingName}
-                      {/* ({requester ? requester.fname:"Unknown"}) */}
+                      ({requester ? requester.fname:"Unknown"})
                       {/* {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()} */}
                       </CardTitle>
                       <CardText>
                        {meeting.description}
                        {meeting.requesterId===localId ? <span> ( You)</span> : null}
                       </CardText>
-                      {expiry===true ? <CardText><h5 style={{color:'#000000'}} >This Meeting is Over</h5></CardText> : null}
+                      {expiry===true ? <CardText><h5 style={{color:'#fff2f2'}} >This Meeting is Over</h5></CardText> : null}
                      
                       {/* <ForJoine user={allUserData}></ForJoine> */}
                     
@@ -251,64 +195,128 @@ const Home = () => {
                     {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
                                onClick={()=>navigate('/midpoint',{state:locations})}
                                >ShowMidPoint</Button> : null}
+                               {invitescount>0 ? <JoineName  user={allUserData} userId={usersinInvitess} />:null}
 
-
+                           {meeting.requesterId===localId ? <DeleteMeeting  meetingId={meeting._id} showMeetingData={()=>getAllData()} /> : null}     
+                     
                   </Card>
-                  <Card 
-                  id={`hover-card-${meeting._id}`}
-                  className="hover-card"
-                  // className="hover-card meeting-hover-card"
-                  style={{
-                    // width: "36rem",
-                    // position: "absolute",
-                    // top: "50%",
-                    // left: "50%",
-                    // transform: "translate(-50%, -50%)",
-                    // opacity: 0,
-                    // visibility: "hidden",
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    width: "100%",
-                    opacity: 0,
-                    visibility: "hidden",
-                    zIndex: 1,
-                    transition: "opacity 0.2s ease-in-out, visibility 0.11s ease-in-out",
-                    marginBottom:10
-                  }}
-                  >
-                    <CardHeader 
-                     style={{
-                      
-                      backgroundColor: expiry ? '#f98585' : '#adf5b2'
-                    }}
-                    >
-                     { meeting.status } 
-                     (invited {invited})
-                      (Joined {invitescount})
-                    </CardHeader>
-                    <CardBody>
-                    <CardTitle tag="h5">
-                        {meeting.meetingName}
-                      ({requester ? requester.fname:"Unknown"})
-                      {/* {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()} */}
-                      </CardTitle>
-                      <CardText>
-                       {meeting.description}
-                       {meeting.requesterId===localId ? <span> ( You)</span> : null}
-                      </CardText>
-                      {expiry===true ? <CardText><h5 style={{color:'#000000'}} >This Meeting is Over</h5></CardText> : null}
-                      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
-                      showMeetingData={()=>getAllData()}/> : null} 
-                    </CardBody>
-                    {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
-                               onClick={()=>navigate('/midpoint',{state:locations})}
-                               >ShowMidPoint</Button> : null}
-
-                  </Card>
-                  </div>
-                  </>
                 )
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+               
+
+
+                //   return(
+                //   <>
+                //   <div  style={{ position: "relative" }}>
+                //   <Card 
+                //   key={meeting._id}
+                //   className="meeting-card"
+                //   onMouseEnter={() => {
+                //     const card = document.querySelector(`#hover-card-${meeting._id}`);
+                //     card.style.opacity = 1;
+                //     card.style.visibility = "visible";
+                //     // card.classList.add("hover-card-visible");
+                //   }}
+                //   onMouseLeave={() => {
+                //     const card = document.querySelector(`#hover-card-${meeting._id}`);
+                //     card.style.opacity = 0;
+                //     card.style.visibility = "hidden";
+                //     // card.classList.remove("hover-card-visible");
+                //   }}
+                //   style={{
+                //     width: "18rem",
+                //     // backgroundColor: expiry ? "#f98585" : "",
+                //     marginBottom:10
+                //   }}
+                //   >
+                //     <CardHeader 
+                //     style={{
+                      
+                //       backgroundColor: expiry ? '#f98585' : '#adf5b2'
+                //     }}
+                //     >
+                //      {/* { meeting.status }  */}
+                //      {/* (invited {invited}) */}
+                //      {/* (Joined {invitescount}) */}
+                //     </CardHeader>
+                //     <CardBody >
+                //       <CardTitle tag="h5">
+                //         {meeting.meetingName}
+                //       {/* ({requester ? requester.fname:"Unknown"}) */}
+                //       {/* {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()} */}
+                //       </CardTitle>
+                //       <CardText>
+                //        {meeting.description}
+                //        {meeting.requesterId===localId ? <span> ( You)</span> : null}
+                //       </CardText>
+                //       {expiry===true ? <CardText><h5 style={{color:'#000000'}} >This Meeting is Over</h5></CardText> : null}
+                     
+                //       {/* <ForJoine user={allUserData}></ForJoine> */}
+                    
+                //      {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
+                //       showMeetingData={()=>getAllData()}/> : null} 
+                //     </CardBody>
+                //     {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
+                //                onClick={()=>navigate('/midpoint',{state:locations})}
+                //                >ShowMidPoint</Button> : null}
+
+
+                //   </Card>
+                //   <Card 
+                //   id={`hover-card-${meeting._id}`}
+                //   className="hover-card"
+                //   // className="hover-card meeting-hover-card"
+                //   style={{
+                //     // width: "36rem",
+                //     // position: "absolute",
+                //     // top: "50%",
+                //     // left: "50%",
+                //     // transform: "translate(-50%, -50%)",
+                //     // opacity: 0,
+                //     // visibility: "hidden",
+                //     position: "absolute",
+                //     top: "0",
+                //     left: "0",
+                //     width: "100%",
+                //     opacity: 0,
+                //     visibility: "hidden",
+                //     zIndex: 1,
+                //     transition: "opacity 0.2s ease-in-out, visibility 0.11s ease-in-out",
+                //     marginBottom:10
+                //   }}
+                //   >
+                //     <CardHeader 
+                //      style={{
+                      
+                //       backgroundColor: expiry ? '#f98585' : '#adf5b2'
+                //     }}
+                //     >
+                //      { meeting.status } 
+                //      (invited {invited})
+                //       (Joined {invitescount})
+                //     </CardHeader>
+                //     <CardBody>
+                //     <CardTitle tag="h5">
+                //         {meeting.meetingName}
+                //       ({requester ? requester.fname:"Unknown"})
+                //       {/* {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()} */}
+                //       </CardTitle>
+                //       <CardText>
+                //        {meeting.description}
+                //        {meeting.requesterId===localId ? <span> ( You)</span> : null}
+                //       </CardText>
+                //       {expiry===true ? <CardText><h5 style={{color:'#000000'}} >This Meeting is Over</h5></CardText> : null}
+                //       {meeting.requesterId===localId ? <UpdateMeetingData meetingId={meeting._id} user={allUserData}
+                //       showMeetingData={()=>getAllData()}/> : null} 
+                //     </CardBody>
+                //     {invitescount>0 ?<Button style={{ marginLeft:139 ,marginRight:7,marginBottom:6}} color="info"  
+                //                onClick={()=>navigate('/midpoint',{state:locations})}
+                //                >ShowMidPoint</Button> : null}
+
+                //   </Card>
+                //   </div>
+                //   </>
+                // )
             })
             
                 
@@ -333,7 +341,7 @@ const Home = () => {
     Authorization:localToken
    }
    try{
-    let allMeetings=await axios.post("http://localhost:5000/api/updateMeeting",data,
+    let allMeetings=await axios.post("http://localhost:5000/api/updateStatusMeeting",data,
     {
       headers:header
     });
@@ -412,7 +420,7 @@ const Home = () => {
             </div>
             <div className='col-4' style={{paddingLeft:180}}>
                 <h4 style={{paddingLeft:20,paddingBottom:10}} >Create New Meeting</h4>
-               <CreateMeeting></CreateMeeting>
+               <CreateMeeting showMeetingData={()=>getAllData()} />
             </div>
         </div>
     </div>
